@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!--打印sql语句-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <typeAliases>
+        <!--
+            1. 给某类型设置一个别名
+        -->
+        <!--<typeAlias type="com.qianfeng.pojo.Student" alias="Student"></typeAlias>-->
+        <!--
+            2. 给整个包进行配置，在mapper使用时可以直接使用类名
+        -->
+        <package name="com.test.pojo"></package>
+    </typeAliases>
+</configuration>

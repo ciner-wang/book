@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html  lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <title>上传视频</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+<body>
+
+<!--需要一个表单form action:后台添加视频的接口-->
+
+    <form id="editmoneyform" class="layui-form layui-form-pane"  lay-filter="editmoneyform">
+        <div class="layui-form-item" >
+            <label class="layui-form-label">id</label>
+            <div class="layui-input-block">
+                <input type="text" name="umId" class="layui-input"  required lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" class="layui-input" required lay-verify="required" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">余额</label>
+            <div class="layui-input-block">
+                <input type="text" name="umMoney" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="edit-money-form-submit">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+</body>
+<script src="/layui/layui.js"></script>
+<script src="/js/Moneylist.js"></script>
+</html>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <id column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_image" jdbcType="VARCHAR" property="userImage" />
+    <result column="user_psw" jdbcType="VARCHAR" property="userPsw" />
+    <result column="user_sex" jdbcType="VARCHAR" property="userSex" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="user_info" jdbcType="LONGVARCHAR" property="userInfo" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from tb_user
+    where user_id = #{userId,jdbcType=INTEGER}
+      and user_name = #{userName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.User">
+    insert into tb_user (user_id, user_name, user_image, 
+      user_psw, user_sex, user_address, 
+      user_tel, user_email, user_info
+      )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userImage,jdbcType=VARCHAR}, 
+      #{userPsw,jdbcType=VARCHAR}, #{userSex,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, 
+      #{userTel,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{userInfo,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.User">
+    update tb_user
+    set user_image = #{userImage,jdbcType=VARCHAR},
+      user_psw = #{userPsw,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=VARCHAR},
+      user_address = #{userAddress,jdbcType=VARCHAR},
+      user_tel = #{userTel,jdbcType=VARCHAR},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_info = #{userInfo,jdbcType=LONGVARCHAR},
+       user_name = #{userName,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select user_id, user_name, user_image, user_psw, user_sex, user_address, user_tel, 
+    user_email, user_info
+    from tb_user
+    where user_id = #{userId,jdbcType=INTEGER}
+
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select user_id, user_name, user_image, user_psw, user_sex, user_address, user_tel, 
+    user_email, user_info
+    from tb_user
+  </select>
+
+  <!--分页列表-->
+  <select id="findUserListByPage" resultMap="BaseResultMap">
+    select user_id, user_name, user_image, user_psw, user_sex, user_address, user_tel,
+    user_email, user_info
+    from tb_user limit #{start},#{limit}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_user;
+  </select>
+  <delete id="deleteBatch">
+    delete from tb_user where user_id in
+    <foreach close=")" collection="ids" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+  <!--
+      关键字可能为空字符串  ""
+      startTime和endTime可能为null
+      当条件成立时，会将where后面的and给删掉
+    -->
+  <select id="searchUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select user_id, user_name, user_image, user_psw, user_sex, user_address, user_tel,
+    user_email, user_info
+    from tb_user
+    <where>
+      <if test="keyword!=''">
+        or  user_name like '%${keyword}%'
+      </if>
+      <if test="keyword!=''">
+        or  user_address like '%${keyword}%'
+      </if>
+      <if test="keyword!=''">
+        or  user_email like '%${keyword}%'
+      </if>
+
+    </where>
+    limit #{start},#{limit}
+  </select>
+  <select id="searchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*)  from tb_user
+    <where>
+    <if test="keyword!=''">
+      or  user_name like '%${keyword}%'
+    </if>
+      <if test="keyword!=''">
+        or  user_address like '%${keyword}%'
+      </if>
+      <if test="keyword!=''">
+        or  user_email like '%${keyword}%'
+      </if>
+    </where>
+  </select>
+  <select id="getUserByName" resultMap="BaseResultMap">
+    select user_id,user_name,user_psw,user_image,user_sex,user_address,user_tel,user_email,user_info
+    from tb_user where user_name=#{userName}
+  </select>
+
+  <select id="selectByID" resultMap="BaseResultMap">
+    select user_id, user_name, user_image, user_psw, user_sex, user_address, user_tel,
+    user_email, user_info
+    from tb_user
+    where user_id =  #{id}
+  </select>
+</mapper>

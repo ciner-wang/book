@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.CollectMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Collect">
+    <id column="collect_id" jdbcType="INTEGER" property="collectId" />
+    <result column="collect_num" jdbcType="INTEGER" property="collectNum" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+    <result column="book_price" jdbcType="DOUBLE" property="bookPrice" />
+    <result column="collect_money" jdbcType="DOUBLE" property="collectMoney" />
+    <association property="user" column="user_id_fk" javaType="User">
+      <id column="order_id" property="orderId"></id>
+    </association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_collect
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Collect">
+    insert into tb_collect (collect_id, collect_num, user_id, 
+      book_name, book_price, collect_money
+      )
+    values (#{collectId,jdbcType=INTEGER}, #{collectNum,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{bookName,jdbcType=VARCHAR}, #{bookPrice,jdbcType=DOUBLE}, #{collectMoney,jdbcType=DOUBLE}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Collect">
+    update tb_collect
+    set collect_num = #{collectNum,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      book_name = #{bookName,jdbcType=VARCHAR},
+      book_price = #{bookPrice,jdbcType=DOUBLE},
+      collect_money = #{collectMoney,jdbcType=DOUBLE}
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select collect_id, collect_num, user_id, book_name, book_price, collect_money
+    from tb_collect
+    where collect_id = #{collectId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select collect_id, collect_num, user_id, book_name, book_price, collect_money
+    from tb_collect
+  </select>
+
+
+  <!--分页列表-->
+  <select id="findCollectListByPage" resultMap="BaseResultMap">
+    select c.collect_id,u.user_name,c.book_name,c.book_price,c.collect_num,c.collect_money
+    from tb_user u  inner join tb_collect c on u.user_id = c.user_id
+   limit #{start},#{limit}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_user u  inner join tb_collect c on u.user_id = c.user_id
+  </select>
+  <delete id="deleteBatch">
+    delete from tb_collect where user_id in
+    <foreach close=")" collection="ids" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+  <!--
+     关键字可能为空字符串  ""
+     startTime和endTime可能为null
+     当条件成立时，会将where后面的and给删掉
+   -->
+  <select id="searchCollect" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select c.collect_id,u.user_name,c.book_name,c.book_price,c.collect_num,c.collect_money
+    from tb_user u  inner join tb_collect c on u.user_id = c.user_id
+    <where>
+      <if test="keyword!=''">
+        or  u.user_name like '%${keyword}%'
+      </if>
+      <if test="keyword!=''">
+        or  c.book_name like '%${keyword}%'
+      </if>
+    </where>
+    limit #{start},#{limit}
+  </select>
+  <select id="searchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*)
+    from tb_user u  inner join tb_collect c on u.user_id = c.user_id
+    <where>
+      <if test="keyword!=''">
+        or  u.user_name like '%${keyword}%'
+      </if>
+      <if test="keyword!=''">
+        or  c.book_name like '%${keyword}%'
+      </if>
+    </where>
+  </select>
+</mapper>

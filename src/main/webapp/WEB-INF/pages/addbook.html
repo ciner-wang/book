@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html  lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <title>添加图书</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
+
+</head>
+<body>
+<!--需要一个表单form action:后台添加视频的接口-->
+<form class="layui-form layui-form-pane" id="form">
+
+
+    <div class="layui-upload">
+        <div class="layui-upload-list">
+            <input type="text" name="bookImage" required id="bookImage" lay-verify="required"
+                   lay-reqtext="图书封面是必填选项,岂能为空?" placeholder="图书封面路径" autocomplete="off" class="layui-input layui-disabled">
+        </div>
+        <button type="button" class="layui-btn " id="head_upload">上传图片</button>
+        <button style="display: none;" type="button" class="layui-btn-danger layui-btn-xs remove-upload  " id="delimg">删除</button>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图书名</label>
+        <div class="layui-input-block">
+            <input type="text" name="bookName" lay-verify="bookName" lay-reqtext="书名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">作者</label>
+        <div class="layui-input-block">
+            <input type="text" name="bookAuthor" lay-verify="bookAuthor" lay-reqtext="作者是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">出版号</label>
+        <div class="layui-input-block">
+            <input type="text" name="publishCode" lay-verify="publishCode" lay-reqtext="出版号是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">出版商</label>
+        <div class="layui-input-block">
+            <input type="text" name="publishName" lay-verify="publishName" lay-reqtext="出版商是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图书类别</label>
+        <div class="layui-input-block">
+            <select name="classCode" lay-verify="required">
+                <option value="法律">法律</option>
+                <option value="科幻">科幻</option>
+                <option value="少儿科普">少儿科普</option>
+                <option value="世界名著">世界名著</option>
+                <option value="美食">美食</option>
+                <option value="心理学">心理学</option>
+                <option value="计算机">计算机</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">出版时间</label>
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <input type="text" class="layui-input" name="publishTime"  lay-verify="publishTime" id="publishTime">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">单价</label>
+        <div class="layui-input-block">
+            <input type="text" name="bookPrice" lay-verify="bookPrice" lay-reqtext="单价是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">销量</label>
+        <div class="layui-input-block">
+            <input type="text" name="salesNum" lay-verify="salesNum" lay-reqtext="销量是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">简介</label>
+        <div class="layui-input-block">
+            <textarea name="bookInfo" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <!--submit的提交按钮-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="submit" type="submit" class="layui-btn" lay-submit="" lay-filter="add">立即提交</button>
+        </div>
+    </div>
+</form>
+</body>
+
+<script src="/layui/layui.js"></script>
+<script src="/js/Booklist.js"></script>
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#publishTime' //指定元素
+        });
+    });
+</script>
+</html>

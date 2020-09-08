@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.RecommendMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Recommend">
+    <id column="recmd_id" jdbcType="INTEGER" property="recmdId" />
+    <result column="recmd_class" jdbcType="VARCHAR" property="recmdClass" />
+    <result column="publish_code" jdbcType="INTEGER" property="publishCode" />
+    <result column="recmd_people" jdbcType="VARCHAR" property="recmdPeople" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_recommend
+    where recmd_id = #{recmdId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Recommend">
+    insert into tb_recommend (recmd_id, recmd_class, publish_code, 
+      recmd_people)
+    values (#{recmdId,jdbcType=INTEGER}, #{recmdClass,jdbcType=VARCHAR}, #{publishCode,jdbcType=INTEGER}, 
+      #{recmdPeople,jdbcType=LONGVARCHAR}), #{bookName,jdbcType=VARCHAR}
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Recommend">
+    update tb_recommend
+    set recmd_class = #{recmdClass,jdbcType=VARCHAR},
+      publish_code = #{publishCode,jdbcType=INTEGER},
+      recmd_people = #{recmdPeople,jdbcType=LONGVARCHAR},
+      book_name = #{bookName,jdbcType=VARCHAR}
+    where recmd_id = #{recmdId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select recmd_id, recmd_class, publish_code, recmd_people,book_name
+    from tb_recommend
+    where recmd_id = #{recmdId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select recmd_id, recmd_class, publish_code, recmd_people,book_name
+    from tb_recommend
+  </select>
+
+  <!--分页查询-->
+  <select id="findRecmdListByPage" resultMap="BaseResultMap">
+    select *
+    from tb_recommend
+      limit #{start},#{limit}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_recommend;
+  </select>
+  <delete id="deleteBatch">
+    delete from tb_recommend
+    where tb_recommend in
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+
+  </delete>
+  <!--更新-->
+  <update id="updateById">
+    update tb_recommend
+    <set>
+      <if test="field=='recmdClass'">
+        recmd_class=#{value}
+      </if>
+      <if test="field=='recmdPeople'">
+        recmd_people=#{value}
+      </if>
+
+    </set>
+    where recmd_id=#{vid}
+  </update>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.MoneyMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Money">
+    <id column="um_id" jdbcType="INTEGER" property="umId" />
+    <result column="um_money" jdbcType="DOUBLE" property="umMoney" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+ <association property="user" javaType="User">
+   <id column="user_id" jdbcType="INTEGER" property="userId" />
+   <id column="user_name" jdbcType="VARCHAR" property="userName" />
+   <result column="user_image" jdbcType="VARCHAR" property="userImage" />
+   <result column="user_psw" jdbcType="VARCHAR" property="userPsw" />
+   <result column="user_sex" jdbcType="VARCHAR" property="userSex" />
+   <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+   <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+   <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+   <result column="user_info" jdbcType="LONGVARCHAR" property="userInfo" />
+ </association>
+
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_money
+    where um_id = #{umId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Money">
+    insert into tb_money (um_id, um_money, user_id
+      )
+    values (#{umId,jdbcType=INTEGER}, #{umMoney,jdbcType=DOUBLE}, #{userId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Money">
+    update tb_money
+    set um_money = #{umMoney,jdbcType=DOUBLE},
+      user_id = #{userId,jdbcType=INTEGER}
+    where um_id = #{umId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select um_id, um_money, user_id
+    from tb_money
+    where um_id = #{umId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select um_id, um_money, user_id
+    from tb_money
+  </select>
+
+
+
+  <!--分页列表-->
+  <select id="findMoneyListByPage" resultMap="BaseResultMap">
+    select um_id, um_money, user_name
+    from tb_money m inner join tb_user u on m.user_id = u.user_id
+    limit #{start},#{limit}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_money m inner join tb_user u on m.user_id = u.user_id;
+  </select>
+  <delete id="deleteBatch">
+    delete from tb_money where user_id in
+    <foreach close=")" collection="ids" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+    <!--
+      关键字可能为空字符串  ""
+      startTime和endTime可能为null
+      当条件成立时，会将where后面的and给删掉
+    -->
+    <select id="searchMoney" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select um_id, um_money, user_name
+        from tb_money m inner join tb_user u on m.user_id = u.user_id
+        <where>
+            <if test="keyword!=''">
+                and  u.user_name like '%${keyword}%'
+            </if>
+            <if test="mBase!='' ">
+                and m.um_money  &gt;= #{mBase}
+            </if>
+            <if test="mTop!=''">
+                and m.um_money &lt;=  #{mTop}
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+    <select id="searchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from tb_money m inner join tb_user u on m.user_id = u.user_id
+        <where>
+            <if test="keyword!=''">
+                and  u.user_name like '%${keyword}%'
+            </if>
+            <if test="mBase!='' and mTop!=''">
+                and m.um_money between #{mBase} and #{mTop}
+            </if>
+        </where>
+    </select>
+    <!--更新-->
+    <update id="updateById">
+        update tb_money
+        <set>
+            <if test="field=='umMoney'">
+                um_money=#{value}
+            </if>
+        </set>
+        where um_id=#{vid}
+    </update>
+</mapper>

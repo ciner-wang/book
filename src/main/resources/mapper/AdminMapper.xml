@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.AdminMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Admin">
+    <id column="admin_id" jdbcType="INTEGER" property="adminId" />
+    <result column="admin_acount" jdbcType="VARCHAR" property="adminAcount" />
+    <result column="admin_psw" jdbcType="VARCHAR" property="adminPsw" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_admin
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Admin">
+    insert into tb_admin (admin_id, admin_acount, admin_psw
+      )
+    values (#{adminId,jdbcType=INTEGER}, #{adminAcount,jdbcType=VARCHAR}, #{adminPsw,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Admin">
+    update tb_admin
+    set admin_acount = #{adminAcount,jdbcType=VARCHAR},
+      admin_psw = #{adminPsw,jdbcType=VARCHAR}
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select admin_id, admin_acount, admin_psw
+    from tb_admin
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select admin_id, admin_acount, admin_psw
+    from tb_admin
+  </select>
+  <select id="getUserByName" resultMap="BaseResultMap">
+    select admin_acount,admin_psw
+    from tb_admin where admin_acount=#{adminAcount}
+  </select>
+</mapper>

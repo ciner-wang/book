@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描controller包-->
+    <context:component-scan base-package="com.test.controller"></context:component-scan>
+    <!--过滤静态资源-->
+    <mvc:default-servlet-handler/>
+    <!--注解驱动标签：使访问路径跟后台方法匹配通过注解完成
+        可以解决添加静态资源释放标签之后导入controller访问不到的问题
+    -->
+    <mvc:annotation-driven>
+        <!--配置转换器-->
+        <!--
+        register-defaults="true"将配置的bean设置为默认的,就不需要spring帮助我们创建了
+        -->
+        <mvc:message-converters register-defaults="true">
+            <!--fastjson的转换器实体类-->
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <!--
+                    1. 设置反返回数据格式是json格式，编码为utf-8
+                    2. 避免ie浏览器执行异步请求时，返回json出现文件下载的现象
+                -->
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=utf-8</value>
+                        <value>text/html;charset=utf-8</value>
+                    </list>
+                </property>
+                <!--下面这个可以控制返回数据的格式-->
+                <property name="features">
+                    <list>
+                        <!--是否输出为null的字段，默认不输出，添加此属性之后可以输出-->
+                        <value>WriteMapNullValue</value>
+                        <!--当数值为null时，显示0-->
+                        <value>WriteNullNumberAsZero</value>
+                        <!--当字符串为null时，显示"" 空字符串-->
+                        <value>WriteNullStringAsEmpty</value>
+                        <!--当集合属性为null时，显示空数组-->
+                        <value>WriteNullListAsEmpty</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--屏蔽解析器-->
+    <mvc:resources mapping="/layui/**" location="/WEB-INF/layui/"></mvc:resources>
+    <mvc:resources mapping="/css/**" location="/WEB-INF/css/"></mvc:resources>
+    <mvc:resources mapping="/js/**" location="/WEB-INF/js/"></mvc:resources>
+    <mvc:resources mapping="/img/**" location="/WEB-INF/img/"></mvc:resources>
+    <mvc:resources mapping="/InModel/**" location="/WEB-INF/InModel/"></mvc:resources>
+    <!--thymeleaf的模板解析器-->
+    <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/pages/"></property>
+        <property name="suffix" value=".html"></property>
+        <property name="characterEncoding" value="utf-8"></property>
+        <!--设置视图解析器中查询链的顺序-->
+        <property name="order" value="1"></property>
+        <!--模板格式-->
+        <property name="templateMode" value="HTML5"></property>
+        <!--是否开启页面缓存-->
+        <property name="cacheable" value="false"></property>
+    </bean>
+    <!--模板引擎-->
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver"></property>
+    </bean>
+    <!--视图解析器-->
+    <bean id="viewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="characterEncoding" value="utf-8"></property>
+        <property name="templateEngine" ref="templateEngine"></property>
+    </bean>
+    <!--配置上传文件解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--最大上传大小   单位是b-->
+        <property name="maxUploadSize" value="100000000"></property>
+        <!--最大上传内存大小-->
+        <property name="maxInMemorySize" value="100000000"></property>
+    </bean>
+</beans>

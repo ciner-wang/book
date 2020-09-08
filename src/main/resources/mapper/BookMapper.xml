@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.BookMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Book">
+    <id column="book_id" jdbcType="INTEGER" property="bookId" />
+    <id column="publish_code" jdbcType="INTEGER" property="publishCode" />
+    <result column="book_image" jdbcType="VARCHAR" property="bookImage" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+    <result column="book_author" jdbcType="VARCHAR" property="bookAuthor" />
+    <result column="publish_name" jdbcType="VARCHAR" property="publishName" />
+    <result column="publish_time" jdbcType="DATE" property="publishTime" />
+    <result column="book_price" jdbcType="DOUBLE" property="bookPrice" />
+    <result column="sales_num" jdbcType="DOUBLE" property="salesNum" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="book_info" jdbcType="LONGVARCHAR" property="bookInfo" />
+    <!--&lt;!&ndash;通过class_code 连接类别表  图书与类别关系一对一&ndash;&gt;-->
+    <association  property="bookClass" javaType="BookClass">
+      <id column="class_code" property="classCode" jdbcType="VARCHAR" />
+      <result column="class_name" property="className" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from tb_book
+    where book_id = #{bookId,jdbcType=INTEGER}
+      and publish_code = #{publishCode,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Book">
+    insert into tb_book (book_id, publish_code, book_image, 
+      book_name, book_author, publish_name, 
+      publish_time, book_price, sales_num, 
+      class_code, book_info)
+    values (#{bookId,jdbcType=INTEGER}, #{publishCode,jdbcType=INTEGER}, #{bookImage,jdbcType=VARCHAR}, 
+      #{bookName,jdbcType=VARCHAR}, #{bookAuthor,jdbcType=VARCHAR}, #{publishName,jdbcType=VARCHAR}, 
+      #{publishTime,jdbcType=DATE}, #{bookPrice,jdbcType=DOUBLE}, #{salesNum,jdbcType=DOUBLE}, 
+      #{classCode,jdbcType=VARCHAR}, #{bookInfo,jdbcType=LONGVARCHAR})
+  </insert>
+  <!--有改改改-->
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Book">
+    update tb_book
+    set book_image = #{bookImage,jdbcType=VARCHAR},
+      book_name = #{bookName,jdbcType=VARCHAR},
+      book_author = #{bookAuthor,jdbcType=VARCHAR},
+      publish_name = #{publishName,jdbcType=VARCHAR},
+      publish_time = #{publishTime,jdbcType=DATE},
+      book_price = #{bookPrice,jdbcType=DOUBLE},
+      sales_num = #{salesNum,jdbcType=DOUBLE},
+      class_code = #{classCode,jdbcType=VARCHAR},
+      book_info = #{bookInfo,jdbcType=LONGVARCHAR},
+       publish_code = #{publishCode,jdbcType=INTEGER}
+    where book_id = #{bookId,jdbcType=INTEGER}
+
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select book_id, publish_code, book_image, book_name, book_author, publish_name, publish_time, 
+    book_price, sales_num, class_code, book_info
+    from tb_book
+    where book_id = #{bookId,jdbcType=INTEGER}
+      and publish_code = #{publishCode,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select book_id, publish_code, book_image, book_name, book_author, publish_name, publish_time, 
+    book_price, sales_num, class_code, book_info
+    from tb_book
+  </select>
+  <!--分页查询-->
+  <select id="findBookListByPage" resultMap="BaseResultMap">
+    select b.*,c.class_name
+    from tb_book as b
+    inner join tb_class as c
+       on c.class_code=b.class_code
+      limit #{start},#{limit}
+
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_book as b
+    inner join tb_class as c
+       on c.class_code=b.class_code
+  </select>
+  <!--删掉相应图书-->
+  <delete id="deleteBatch">
+    delete from tb_book
+    where book_id in
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+  <!--
+     关键字可能为空字符串  ""
+     startTime和endTime可能为null
+     当条件成立时，会将where后面的and给删掉
+   -->
+  <select id="searchBook" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select b.*,c.class_name
+    from tb_book as b
+    inner join tb_class as c
+    on c.class_code=b.class_code
+    <where>
+      <if test="keyword!=''">
+        and  b.book_name like '%${keyword}%'
+      </if>
+      <if test="startTime!=null and endTime!=null">
+        and b.publish_time between #{startTime} and #{endTime}
+      </if>
+    </where>
+    limit #{start},#{limit}
+  </select>
+  <select id="searchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*)
+    from tb_book as b
+    inner join tb_class as c
+    on c.class_code=b.class_code
+    <where>
+      <if test="keyword!=''">
+        and  b.book_name like '%${keyword}%'
+      </if>
+      <if test="startTime!=null and endTime!=null">
+        and b.publish_time between #{startTime} and #{endTime}
+      </if>
+
+    </where>
+  </select>
+  <select id="selectByID" resultMap="BaseResultMap">
+    select book_id, publish_code, book_image, book_name, book_author, publish_name, publish_time,
+    book_price, sales_num, class_code, book_info
+    from tb_book
+    where book_id =  #{bookId}
+  </select>
+</mapper>

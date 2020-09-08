@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Order">
+    <id column="order_id" jdbcType="INTEGER" property="orderId" />
+    <id column="order_code" jdbcType="INTEGER" property="orderCode" />
+    <result column="order_money" jdbcType="DOUBLE" property="orderMoney" />
+    <result column="order_date" jdbcType="DATE" property="orderDate" />
+    <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <association property="user" javaType="User">
+      <id property="userId" column="user_id"/>
+      <id column="user_name" jdbcType="VARCHAR" property="userName" />
+      <result column="user_image" jdbcType="VARCHAR" property="userImage" />
+      <result column="user_psw" jdbcType="VARCHAR" property="userPsw" />
+      <result column="user_sex" jdbcType="VARCHAR" property="userSex" />
+      <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+      <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+      <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+      <result column="user_info" jdbcType="LONGVARCHAR" property="userInfo" />
+    </association>
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from tb_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+      and order_code = #{orderCode,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Order">
+    insert into tb_order (order_id, order_code, order_money, 
+      order_date, order_status, user_id
+      )
+    values (#{orderId,jdbcType=INTEGER}, #{orderCode,jdbcType=INTEGER}, #{orderMoney,jdbcType=DOUBLE}, 
+      #{orderDate,jdbcType=DATE}, #{orderStatus,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Order">
+    update tb_order
+    set order_money = #{orderMoney,jdbcType=DOUBLE},
+      order_date = #{orderDate,jdbcType=DATE},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=INTEGER}
+      and order_code = #{orderCode,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select order_id, order_code, order_money, order_date, order_status, user_id
+    from tb_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+      and order_code = #{orderCode,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select order_id, order_code, order_money, order_date, order_status, user_id
+    from tb_order
+  </select>
+
+
+  <!--分页列表-->
+  <select id="findOrderListByPage" resultMap="BaseResultMap">
+    select *
+    from tb_order o inner join tb_user u on o.user_id = u.user_id
+     limit #{start},#{limit}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_order o inner join tb_user u on o.user_id = u.user_id
+  </select>
+  <delete id="deleteBatch">
+    delete from tb_order where user_id in
+    <foreach close=")" collection="ids" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+  <!--
+       关键字可能为空字符串  ""
+       startTime和endTime可能为null
+       当条件成立时，会将where后面的and给删掉
+     -->
+  <select id="searchOrder" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select *
+    from tb_order o inner join tb_user u on o.user_id = u.user_id
+    <where>
+      <if test="keyword!=''">
+        and  u.user_id like '%${keyword}%'
+      </if>
+      <if test="startTime!=null and endTime!=null">
+        and o.order_date between #{startTime} and #{endTime}
+      </if>
+    </where>
+    limit #{start},#{limit}
+  </select>
+  <select id="searchCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(*)
+    from tb_order o inner join tb_user u on o.user_id = u.user_id
+    <where>
+      <if test="keyword!=''">
+        and  u.user_id like '%${keyword}%'
+      </if>
+      <if test="startTime!=null and endTime!=null">
+        and o.order_date between #{startTime} and #{endTime}
+      </if>
+    </where>
+  </select>
+</mapper>

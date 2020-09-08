@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改图书信息页面</title>
+    <link rel="stylesheet"th:href="@{/layui/css/layui.css}"  media="all">
+</head>
+<body>
+<!--<h1 th:text="${book.bookInfo}"><h1>-->
+
+      <form class="layui-form layui-form-pane" id="editbookform">
+
+          <div class="layui-form-item">
+              <label class="layui-form-label">ID</label>
+              <div class="layui-input-block">
+                  <input type="text" readonly="ture" th:value="${book.bookId}" text="bookId" name="bookId" lay-verify="bookName" lay-reqtext="书名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+              </div>
+          </div>
+            <div class="layui-upload">
+                <div class="layui-upload-list">
+                    <input type="text" readonly="ture" th:value="${book.bookImage}" name="bookImage" required id="bookImage" lay-verify="required"
+                           lay-reqtext="图书封面是必填选项,岂能为空?" placeholder="图书封面路径" autocomplete="off" class="layui-input layui-disabled">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图书名</label>
+                <div class="layui-input-block">
+                    <input type="text" th:value="${book.bookName}" text="bookName" name="bookName" lay-verify="bookName" lay-reqtext="书名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">作者</label>
+                <div class="layui-input-block">
+                    <input type="text" th:value="${book.bookAuthor}" name="bookAuthor" lay-verify="bookAuthor" lay-reqtext="作者是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出版号</label>
+                <div class="layui-input-block">
+                    <input type="text" th:value="${book.publishCode}" name="publishCode" lay-verify="publishCode" lay-reqtext="出版号是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出版商</label>
+                <div class="layui-input-block">
+                    <input type="text" th:value="${book.publishName}" name="publishName" lay-verify="publishName" lay-reqtext="出版商是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+          <div class="layui-form-item">
+              <label class="layui-form-label">类别编号</label>
+              <div class="layui-input-block">
+                  <select name="classCode"  lay-verify="required">
+                      <option  th:each="v:${bookclass}">
+                          <span th:text="${v.classCode}"></span>
+                      </option>
+                  </select>
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+              <label class="layui-form-label">出版时间</label>
+              <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+                  <input type="text" th:value="${#dates.format(book.publishTime,'yyyy-MM-dd')}" class="layui-input" name="publishTime"  lay-verify="publishTime" id="publishTime">
+              </div>
+          </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">单价</label>
+                <div class="layui-input-block">
+                    <input type="text" th:value="${book.bookPrice}" name="bookPrice" lay-verify="bookPrice" lay-reqtext="单价是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">销量</label>
+                <div class="layui-input-block">
+                    <input type="text" th:value="${book.salesNum}" name="salesNum" lay-verify="salesNum" lay-reqtext="销量是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">简介</label>
+                <div class="layui-input-block">
+                    <textarea name="bookInfo" th:text="${book.bookInfo}" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+          <!--submit的提交按钮-->
+          <div class="layui-form-item">
+              <div class="layui-input-block">
+                  <button id="submit" type="submit" class="layui-btn" lay-submit="" lay-filter="sureEdit">立即提交</button>
+              </div>
+          </div>
+      </form>
+
+        <script th:src="@{/layui/layui.js}"></script>
+        <script th:src="@{/js/Booklist.js}"></script>
+        <script th:src="@{/js/date.js}"></script>
+      <script>
+          layui.use('laydate', function(){
+              var laydate = layui.laydate;
+
+              //执行一个laydate实例
+              laydate.render({
+                  elem: '#publishTime' //指定元素
+              });
+          });
+      </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.BookClassMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.BookClass">
+    <id column="class_id" jdbcType="INTEGER" property="classId" />
+    <id column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from tb_class
+    where class_id = #{classId,jdbcType=INTEGER}
+      and class_code = #{classCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.BookClass">
+    insert into tb_class (class_id, class_code, class_name
+      )
+    values (#{classId,jdbcType=INTEGER}, #{classCode,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.BookClass">
+    update tb_class
+    set class_name = #{className,jdbcType=VARCHAR}
+    where class_id = #{classId,jdbcType=INTEGER}
+      and class_code = #{classCode,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select class_id, class_code, class_name
+    from tb_class
+    where class_id = #{classId,jdbcType=INTEGER}
+      and class_code = #{classCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select class_id, class_code, class_name
+    from tb_class
+  </select>
+
+
+  <!--分页列表-->
+  <select id="findBookClassListByPage" resultMap="BaseResultMap">
+    select *
+    from tb_class
+    limit #{start},#{limit}
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from tb_class;
+  </select>
+  <delete id="deleteBatch">
+    delete from tb_class
+    <foreach close=")" collection="ids" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
+  </delete>
+
+  <!--更新-->
+  <update id="updateById">
+    update tb_class
+    <set>
+      <if test="field=='classCode'">
+        class_code=#{value}
+      </if>
+      <if test="field=='className'">
+        class_name=#{value}
+      </if>
+    </set>
+    where class_id=#{vid}
+  </update>
+</mapper>

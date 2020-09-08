@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息页面</title>
+    <link rel="stylesheet"th:href="@{/layui/css/layui.css}"  media="all">
+</head>
+<body>
+<!--<h1 th:text="${book.bookInfo}"><h1>-->
+
+<form class="layui-form layui-form-pane" id="edituserform">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">ID</label>
+        <div class="layui-input-block">
+            <input type="text" readonly="ture" th:value="${user.userId}" text="userId" name="userId" lay-verify="userId" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-upload">
+        <div class="layui-upload-list">
+            <input type="text" readonly="ture" th:value="${user.userImage}" name="userImage" id="userImage" lay-verify="required"
+                   lay-reqtext="图书封面是必填选项,岂能为空?" placeholder="图书封面路径" autocomplete="off" class="layui-input layui-disabled">
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" th:value="${user.userName}" text="userName" name="userName" lay-verify="userName" lay-reqtext="用户名是必填项，岂能为空？" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" th:value="${user.userPsw}" name="userPsw" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid layui-word-aux">'密码必须6到12位，且不能出现空格'</div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-block">
+            <input type="radio"  th:value="${user.userSex}" name="userSex" value="男" title="男">
+            <input type="radio"  th:value="${user.userSex}" name="userSex" value="女" title="女" checked>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址</label>
+        <div class="layui-input-block">
+            <input type="text" th:value="${user.userAddress}" name="userAddress"  placeholder="请输入地址" autocomplete="off" class="layui-input">
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">验证手机</label>
+            <div class="layui-input-inline">
+                <input type="tel" th:value="${user.userTel}" name="userTel" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">验证邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text"  th:value="${user.userEmail}" name="userEmail" lay-verify="email" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">个人简介</label>
+        <div class="layui-input-block">
+            <textarea name="userInfo" th:text="${user.userInfo}" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <!--submit的提交按钮-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="submit" type="submit" class="layui-btn" lay-submit="" lay-filter="sureEdit">立即提交</button>
+        </div>
+    </div>
+</form>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/js/Userlist.js}"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
