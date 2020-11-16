@@ -24,6 +24,7 @@ public interface AdminMapper {
      */
     Admin getAdminByName(@Param("adminAcount") String adminAcount);
 
-//    User findByName(String userName);
-//    void save(User user);
+
+
+
 }

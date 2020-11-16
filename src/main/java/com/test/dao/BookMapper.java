@@ -4,7 +4,7 @@ import com.test.pojo.Book;
 import java.util.List;
 import java.util.Map;
 
-import com.test.pojo.Money;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface BookMapper {

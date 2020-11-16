@@ -35,6 +35,7 @@ public class BookController {
     public Result collectList(Integer page,Integer limit){
         Result result = bookService.getBookList(page,limit);
         result.toString();
+
         return result;
     }
 
@@ -78,7 +79,7 @@ public class BookController {
 //        }
         System.out.println(book.getPublishTime());
        book.toString();
-       System.out.println(" hbibbuib");
+
         return result;
     }
 
@@ -93,10 +94,10 @@ public class BookController {
         System.out.println(id);
         Book book = bookService.selectByID(id);
         List<BookClass> bookclass= bookClassService.selectAll();
-//        System.out.println(book.getBookInfo());
+
         //页面传递对象
         model.addAttribute("book",book);
-//        //页面传递集合
+        //页面传递集合
         model.addAttribute("bookclass",bookclass);
         return "editbook";
 
@@ -105,8 +106,6 @@ public class BookController {
     @RequestMapping("/updateBook")
     @ResponseBody
     public Result updateBook( Book  book){
-        System.out.println("这是bookController");
-        System.out.println(book.toString());
         Result result = bookService.updateBook(book);
         return result;
     }

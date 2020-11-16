@@ -22,7 +22,7 @@
                         connectionURL="${jdbc_url}" userId="${jdbc_username}"
                         password="${jdbc_password}"/>
 
-        <!--指定生成的类型为java类型，避免数据库中number等类型字段 false时解析成Integer  true时解析成BigDecimal -->
+        <!--&lt;!&ndash;指定生成的类型为java类型，避免数据库中number等类型字段 false时解析成Integer  true时解析成BigDecimal &ndash;&gt;-->
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>

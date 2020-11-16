@@ -33,7 +33,9 @@ public class AdminServiceImpl implements AdminService{
             //比较账号和密码
             //根据账号查询用户
             Admin admin = adminMapper.getAdminByName(adminAcount);
+
             if (admin == null || !admin.getAdminPsw().equals(Md5Util.secretPass(adminAcount, adminPsw))) {
+                System.out.println();
                 result.setMessage("账号或者密码输入错误");
                 result.setStatus(500);
             } else {

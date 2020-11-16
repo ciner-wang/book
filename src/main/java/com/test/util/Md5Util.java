@@ -10,14 +10,14 @@ public class Md5Util {
      * 加密：不可逆
      * 这里我们使用账号作为盐，进行加密
      */
-    public static String secretPass(String userName,String userPsw){
-        Md5Hash md5Hash = new Md5Hash(userPsw, userName, 100);
+    public static String secretPass(String adminAcount,String adminPsw){
+        Md5Hash md5Hash = new Md5Hash(adminAcount, adminPsw, 100);
         String passStr = md5Hash.toString();
         return passStr;
     }
 
     public static void main(String[] args) {
-        String secretPass = secretPass("1", "123");
+        String secretPass = secretPass("admin", "123");
         System.out.println(secretPass);
     }
 }

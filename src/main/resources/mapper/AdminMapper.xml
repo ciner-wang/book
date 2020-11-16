@@ -32,7 +32,7 @@
     select admin_id, admin_acount, admin_psw
     from tb_admin
   </select>
-  <select id="getUserByName" resultMap="BaseResultMap">
+  <select id="getAdminByName" resultMap="BaseResultMap">
     select admin_acount,admin_psw
     from tb_admin where admin_acount=#{adminAcount}
   </select>
